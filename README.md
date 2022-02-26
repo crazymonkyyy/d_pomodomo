@@ -15,3 +15,5 @@ Features:
 4. the apility to run a command of your choice instead of some awful beep
 
 5. Gain h4k3r cr3d for learning a complex CLI API
+
+6. Colors

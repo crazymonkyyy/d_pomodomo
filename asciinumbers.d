@@ -10,6 +10,7 @@ string sanitize(T)(T a){
 	return a.join;
 }
 enum lines=7;
+enum reallines=7;
 enum string[11] number=seperate(lines).map!sanitize.array[0..11];
 string append(int[] nums...){
 	string o;
@@ -17,7 +18,7 @@ string append(int[] nums...){
 		return number[i].splitter('\n');
 	}
 	auto ror=nums.map!f.array;
-	foreach(i;0..lines){
+	foreach(i;0..reallines){
 	foreach(ref e;ror){
 		o~=e.front;
 		e.popFront;

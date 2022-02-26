@@ -6,11 +6,34 @@ alias mt = MonoTime;
 alias td = Duration;
 alias now= mt.currTime;
 
-void draw(T)(T a){
+import terminalstrings;
+auto cumulativemap(alias F,R,A...)(R r,A args){
+	//static assert(is(A==Parameters!F[1..$]));
+	struct map{
+		R r;
+		A args;
+		auto front(){return F(r.front,args);}
+		auto popFront(){r.popFront;}
+		auto empty(){return r.empty;}
+	}
+	return map(r,args);
+}
+
+void draw(T)(T a,int which,int timer){
 	import asciinumbers;
-	"\033[2J\033[1;1H".write;
-	//a.writeln;
-	time(a.total!"minutes".to!int,a.total!"seconds".to!int%60).write;
+	clearscreen();
+	changecolorreadable(which+4);//red ugly
+	string addmetadata(string s,ref int i,int which,int timer){
+		if(i==0){s~=" timer "~which.to!string;}
+		if(i==2){s~=" / "~timer.to!string~":00";}
+		i++;
+		return s;
+	}
+	time(a.total!"minutes".to!int,a.total!"seconds".to!int%60)[0..$-1]
+		.splitter('\n')
+		.array[0..6]
+		.cumulativemap!addmetadata(0,which,timer)
+		.each!writeln;
 }
 
 void main(string[] s){
@@ -57,7 +80,7 @@ void main(string[] s){
 			current++; if(current==timers.length){current=0;}
 			starttimer;
 		  } else {
-			timeleft.draw;
+			timeleft.draw(current,timers[current]);
 	}}}
 	starttimer;
 	while(true){
